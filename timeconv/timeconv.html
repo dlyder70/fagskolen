@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- 25022013 KHH, siste mod 03112024 KG -->
+<html>
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="timeconv_stylesheet.css">
+	    <title>
+            UNIX time converter
+        </title>
+    	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <script language="JavaScript" type="text/javascript">
+        
+            function timeToHuman()
+            {
+                var theDate = new Date(document.u2h.timeStamp.value * 1000);
+                dateString = theDate.toUTCString();
+        	    document.u2h.result.value = dateString;
+            }
+            function CFAtimeToHuman()
+            {
+                var theDate = new Date((document.u2hCFA.timeStampCFA.value * 1000 ) + 978307200000);
+                dateString = theDate.toUTCString();
+        	    document.u2hCFA.resultCFA.value = dateString;
+            }
+            function humanToTime()
+            {
+                var humDate = new Date(Date.UTC(document.h2u.inYear.value,
+                  (stripLeadingZeroes(document.h2u.inMon.value)-1),
+                  stripLeadingZeroes(document.h2u.inDay.value),
+                  stripLeadingZeroes(document.h2u.inHr.value),
+                  stripLeadingZeroes(document.h2u.inMin.value),
+                  stripLeadingZeroes(document.h2u.inSec.value)));
+                document.h2u.result.value = (humDate.getTime()/1000.0);
+            }
+
+            function stripLeadingZeroes(input)
+            {
+                if((input.length > 1) && (input.substr(0,1) == "0"))
+                return input.substr(1);
+                else
+                    return input;
+            }
+        </script>
+
+        <script>
+            try 
+            {  
+                for(var lastpass_iter=0; lastpass_iter < document.forms.length; lastpass_iter++)
+                {
+                    var lastpass_f = document.forms[lastpass_iter];
+                    if(typeof(lastpass_f.lpsubmitorig)=="undefined")
+                    {
+                        if (typeof(lastpass_f.submit) == "function") 
+                        {
+                            lastpass_f.lpsubmitorig = lastpass_f.submit;
+                            lastpass_f.submit = function()
+                            {
+                                var form = this;
+                                try
+                                {
+                                    if (document.documentElement && 'createEvent' in document)            
+                                    {
+                                        var forms = document.getElementsByTagName('form');
+                                        for (var i=0 ; i<forms.length ; ++i)
+                                        if (forms[i]==form)
+                                        {
+                                            var element = document.createElement('lpformsubmitdataelement');
+                                            element.setAttribute('formnum',i);
+                                            element.setAttribute('from','submithook');
+                                            document.documentElement.appendChild(element);
+                                            var evt = document.createEvent('Events');
+                                            evt.initEvent('lpformsubmit',true,false);
+                                            element.dispatchEvent(evt);
+                                            break;
+                                        }
+                                    }
+                                } 
+                                catch (e) {}
+                                try 
+                                {
+                                    form.lpsubmitorig();
+                                } 
+                                catch (e) {}
+                            }
+                        }
+                    }
+                }
+            }
+            catch (e) {}
+        </script>
+    </head>
+
+    <body>
+
+        <h1>
+            UNIX and CFAbsolute time converter
+        </h1>
+
+        <p>
+            Time-stamps are converted to GMT, not local time.
+        </p>
+
+        <form name="u2h"><center>
+            <table style="width: 500px;" align="left" border="1" cellpadding="3" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td align="center">
+                            <p>
+                                <span style="color: #000080;" color="#000080" data-mce-mark="1">
+                                    <span style="font-size: small;" size="3" data-mce-mark="1"><b>
+                                        Converts Unix time to Human Readable format Date/time</b>
+                                    </span>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="color: #000080;" color="#000080" data-mce-mark="1">
+                                    <span style="font-size: small;" size="3" data-mce-mark="1">
+                                        This timestamp is widely used<br>
+                                        Sample: 1645495342<br><br>
+                                    </span> 
+                                    <span style="color: #339966;" data-mce-mark="1">
+                                        <strong>
+                                            <span style="font-size: x-small;" size="2" data-mce-mark="1">
+                                                (Based on seconds since standard epoch of 1/1/1970)
+                                            </span>
+                                        </strong>
+                                    </span>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="color: #000080;" color="#000080" data-mce-mark="1">
+                                    <span style="font-size: small;" size="3" data-mce-mark="1">
+                                        Input is either desimal or Hex in Big-Endian with preceding 0x
+                                    </span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <p>
+                                <span style="color: #000080;" color="#000080" data-mce-mark="1">
+                                    <span style="font-size: small;" size="3" data-mce-mark="1">&nbsp;
+                                    </span>
+                                </span>
+                                <br>
+                                <span style="color: #800000; font-size: x-small;" color="#800000" size="2" data-mce-mark="1">
+                                    UNIX TimeStamp:
+                                </span> 
+                                <input name="timeStamp" size="20" type="text"><br> 
+                                <input value="Submit" onclick="timeToHuman();" type="button">&nbsp;
+                                <input value="Reset" type="reset"><br>
+                                <strong>
+                                    <span style="color: #ff0000;" data-mce-mark="1">
+                                        Result
+                                    </span>
+                                </strong>:
+                                <input name="result" size="30" readonly="readonly" type="text">
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </center><br><br>
+        </form>
+
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+
+        <form name="u2hCFA"><center>
+    
+            <table style="width: 500px;" align="left" border="1" cellpadding="3" cellspacing="0">
+
+                <tbody>
+                    <tr>
+                        <td align="center">
+                            <p>
+                                <span style="color: #000080;" color="#000080" data-mce-mark="1">
+                                    <span style="font-size: small;" size="3" data-mce-mark="1"><b>
+                                        Converts CFAbsolute time to Human Readable format Date/time<br><br></b>
+                                        This timestamp is widely used in MAC OS X<br>
+                                        Sample: 667188142
+                                    </span>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="color: #000080;" color="#000080" data-mce-mark="1">
+                                    <strong>
+                                        <span style="font-size: x-small; color: #339966;" size="2" data-mce-mark="1">
+                                            (Based on seconds since standard epoch of 1/1/2001)<br><br>
+                                        </span>
+                                    </strong>
+                                    <span style="font-size: small;" size="3" data-mce-mark="1">
+                                        Input is either desimal or Hex in Big-Endian with preceding 0x<br>
+                                    </span>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p><br> 
+                                <span style="color: #800000; font-size: x-small;" color="#800000" size="2" data-mce-mark="1">
+                                    CFAbsolute TimeStamp:
+                                </span>
+                                <input name="timeStampCFA" size="20" type="text"><br>
+                                <input value="Submit" onclick="CFAtimeToHuman();" type="button">&nbsp;
+                                <input value="Reset" type="reset"><br><span style="color: #ff0000;" data-mce-mark="1">
+                                <strong>
+                                    Result
+                                </strong>
+                                </span>:
+                                <input name="resultCFA" size="30" readonly="readonly" type="text">
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table></center>
+        </form>
+    </body>
+
+</html>
